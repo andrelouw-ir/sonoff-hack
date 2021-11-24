@@ -113,11 +113,13 @@ static void *sql_thread(void *args)
     int ret = 0;
     char buffer[1024];
 
+    printf("SQL thread initializing\n");
     sprintf (buffer, "select max(c_alarm_time), c_alarm_context from t_alarm_log;");
     ret = sqlite3_prepare_v2(dbc, buffer, -1, &stmt, NULL);
     if (ret != SQLITE_OK) {
         fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(dbc));
     }
+    printf("SQL thread starting\n");
 
     while(tr_sql_routine)
     {
@@ -129,6 +131,7 @@ static void *sql_thread(void *args)
         usleep(1000*1000);
     }
 
+    printf("SQL thread exiting\n");
     sqlite3_finalize(stmt);
 
     return 0;
