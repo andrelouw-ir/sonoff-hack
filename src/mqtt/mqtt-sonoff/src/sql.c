@@ -113,31 +113,25 @@ static void *sql_thread(void *args)
     int ret = 0;
     char buffer[1024];
 
-    printf("SQL thread initializing\n");
     sprintf (buffer, "select max(c_alarm_time), c_alarm_context from t_alarm_log;");
     ret = sqlite3_prepare_v2(dbc, buffer, -1, &stmt, NULL);
     if (ret != SQLITE_OK) {
         fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(dbc));
     }
-    printf("SQL thread starting\n");
 
     while(tr_sql_routine)
     {
         ret = sqlite3_step(stmt);
         if (ret == SQLITE_ROW) {
-        	printf("SQLITE_ROW result returned, retrieve column");
         	char *alarm_time = (char *) sqlite3_column_text(stmt, 0);
         	if (alarm_time != NULL && alarm_time[0] != '\0') {
         		parse_message(alarm_time);
-        	} else {
-        		printf("Empty column, ignoring");
         	}
         }
         ret = sqlite3_reset(stmt);
         usleep(1000*1000);
     }
 
-    printf("SQL thread exiting\n");
     sqlite3_finalize(stmt);
 
     return 0;
@@ -149,7 +143,6 @@ static void *sql_thread(void *args)
 
 static int parse_message(char *msg)
 {
-    sql_debug("Parsing message.\n");
     if (msg == NULL)
     	return -1;
 

@@ -29,7 +29,7 @@
 #include <mqueue.h>
 #include <sqlite3.h>
 
-#define SQL_DEBUG             1
+#define SQL_DEBUG             0
 
 #define IPCSYS_DB             "/mnt/mtd/db/ipcsys.db"
 

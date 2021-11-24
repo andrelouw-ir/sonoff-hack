@@ -122,11 +122,9 @@ int main(int argc, char **argv)
     if(ret!=0)
         exit(EXIT_FAILURE);
 
-    printf("Start initializing SQL\n");
     ret=sql_init();
     if(ret!=0)
         exit(EXIT_FAILURE);
-    printf("SQL initialized...\n");
 
     sql_set_callback(SQL_MSG_MOTION_START, &callback_motion_start);
 
