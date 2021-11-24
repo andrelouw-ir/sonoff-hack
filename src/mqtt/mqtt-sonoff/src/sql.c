@@ -125,7 +125,13 @@ static void *sql_thread(void *args)
     {
         ret = sqlite3_step(stmt);
         if (ret == SQLITE_ROW) {
-            parse_message((char *) sqlite3_column_text(stmt, 0));
+        	printf("SQLITE_ROW result returned, retrieve column");
+        	char *alarm_time = (char *) sqlite3_column_text(stmt, 0);
+        	if (alarm_time != NULL && alarm_time[0] != '\0') {
+        		parse_message(alarm_time);
+        	} else {
+        		printf("Empty column, ignoring");
+        	}
         }
         ret = sqlite3_reset(stmt);
         usleep(1000*1000);
@@ -144,6 +150,8 @@ static void *sql_thread(void *args)
 static int parse_message(char *msg)
 {
     sql_debug("Parsing message.\n");
+    if (msg == NULL)
+    	return -1;
 
     sql_debug(msg);
     sql_debug("\n");
